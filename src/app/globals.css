@@ -2,26 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+body{
+  background-color: #F4F6FA;
+  background-image: url("../app/assets/arcMob.png");
+  background-size: cover;  
+  background-repeat: no-repeat;  
+  background-position: center center;
+  background-position-y: 0px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+body.dark{
+  background-color: #313E51;
+  background-image: url("../app/assets/arcMobDark.svg");
+  background-size: cover;  
+  background-repeat: no-repeat;  
+  background-position: center center;
+  background-position-y: 0px;
 }
