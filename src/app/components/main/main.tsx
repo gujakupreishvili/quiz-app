@@ -223,7 +223,7 @@ export default function Main() {
                 {Object.entries(kitxva.answers).map(([key, value]) => (
                   <button
                     key={key}
-                    className={`flex  relative w-[327px] h-[64px] bg-white dark:bg-gray-800 dark:text-white p-[12px] gap-[16px] items-center rounded-[12px] group cursor-pointer focus:border-[#A729F5] focus:border-[2px] md:w-[616px] md:h-[56px] md:p-[12px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px] 
+                    className={`flex  relative w-[327px] h-[64px] bg-white dark:bg-gray-800 dark:text-white p-[12px] gap-[16px] items-center rounded-[12px] group cursor-pointer  focus:outline-none focus:ring-2 focus:ring-[#A729F5] md:w-[616px] md:h-[56px] md:p-[12px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px] 
                     ${lock ? (ans === key && kitxva?.correct === key ? 'border-green-400 border-[2px]' : ans === key ? 'border-red-400 border-[2px]' : ans===key ? 'border-red-400 border-[2px]': key === kitxva?.correct ? 'border-green-400 border-[2px]': '') : ''}`}
                     onClick={() => handleAns(key)}
                     disabled={lock}
