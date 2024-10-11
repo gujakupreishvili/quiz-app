@@ -42,7 +42,7 @@ export default function Main() {
   const [ans, setAns] = useState<string>('');
   const [lock, setLock] = useState<boolean>(false);
   const [checkQuestion, setCheckQuestion] = useState<boolean>(false);
-  const [rect, setRect]=useState(20)
+  const [rect, setRect] = useState(20);
 
   const handleClick = (label: string) => {
     setType(label);
@@ -69,41 +69,45 @@ export default function Main() {
     filterQuestion();
   }, [type]);
 
+  const nextQuestion = () => {
+    if (index === filteredQuestions.length - 1) {
+      if (checkQuestion) {
+        setNum((prev) => prev + 1);
+      }
+      setRect(prev => prev + 20);
+      setResult(true);
+      localStorage.setItem('score', num.toString());
+      return;
+    }
 
-   const nextQuestion = () => {
-     if (index === filteredQuestions.length - 1) {
-       if (checkQuestion) {
-         setNum((prev) => prev + 1);
-       }
-       setRect(prev => prev + 20);
-       setResult(true);
-       localStorage.setItem('score', num.toString());
-       return;
-     }
-   
-     if (index < filteredQuestions.length - 1) {
-       setIndex(index + 1);
-       setKitxva(filteredQuestions[index + 1]);
-       setLock(false);
-       setCheckButton(false);
-       setAns('');
-   
-       if (checkQuestion) {
-         setNum((prev) => prev + 1);
-        }
-        setRect(prev => {
-          const newRect = prev + 20;
-          localStorage.setItem('rect', newRect.toString());
-          return newRect;
-        });
-       localStorage.setItem('currentQuestionIndex', (index + 1).toString());
-     }
-   };
+    if (index < filteredQuestions.length - 1) {
+      const newIndex = index + 1;
+      setIndex(newIndex);
+      setKitxva(filteredQuestions[newIndex]);
+      setLock(false);
+      setCheckButton(false);
+      setAns('');
+
+      if (checkQuestion) {
+        setNum((prev) => prev + 1);
+      }
+
+      setRect(prev => {
+        const newRect = prev + 20;
+        localStorage.setItem('rect', newRect.toString());
+        return newRect;
+      });
+
+      localStorage.setItem('currentQuestionIndex', (newIndex).toString());
+      localStorage.setItem('selectedAnswer', ''); // Clear saved answer when moving to the next question
+    }
+  };
 
   const handleAns = (type: string) => {
     setAns(type);
+    localStorage.setItem('selectedAnswer', type);
   };
-   const [empty, setEmpty]= useState(true)
+  const [empty, setEmpty]= useState(true)
   const checkAns = () => {
     if (!ans) {
       setEmpty(false);
@@ -132,18 +136,17 @@ export default function Main() {
     setAns('');
     setShow(false);
     setResult(false);
-    setNum(0)
-    setRect(20)
-    localStorage.removeItem('selectedSubject');
-    localStorage.removeItem('currentQuestionIndex');
-    localStorage.removeItem('score');
-    localStorage.removeItem('rect');
+    setNum(0);
+    setRect(20);
+    localStorage.clear();
   };
-   useEffect(() => {
+
+  useEffect(() => {
     const savedSubject = localStorage.getItem('selectedSubject');
     const savedIndex = localStorage.getItem('currentQuestionIndex');
     const savedScore = localStorage.getItem('score');
     const savedRect = localStorage.getItem('rect');
+    const savedAnswer = localStorage.getItem('selectedAnswer');
 
     if (savedSubject) {
       setType(savedSubject);
@@ -151,22 +154,29 @@ export default function Main() {
     }
     
     if (savedIndex) {
-      setIndex(parseInt(savedIndex));
+      const parsedIndex = parseInt(savedIndex);
+      setIndex(parsedIndex);
+      setKitxva(filteredQuestions[parsedIndex]);
     }
 
     if (savedScore) {
       setNum(parseInt(savedScore));
     }
+
     if (savedRect) {
       setRect(parseInt(savedRect));
     }
-  }, []);
+
+    if (savedAnswer) {
+      setAns(savedAnswer);
+    }
+  }, [filteredQuestions]);
 
   return (
     <div className="flex flex-col justify-center items-center gap-[40px] pt-[32px] md:px-[64px] md:py-[49px] lg:flex-row lg:items-baseline lg:px-[140px] lg:py-[40px]">
       {!show ? (
         <>
-          <div className="flex flex-col md:w-full lg:mr-[120px]">
+          <div className="flex flex-col md:w-full">
             <p className="text-[40px] font-light text-[#313E51] dark:text-white w-[283px]  md:text-[64px] md:w-[444px]">
               Welcome to the 
             </p>
@@ -175,12 +185,12 @@ export default function Main() {
               Pick a subject to get started.
             </p>
           </div>
-          <div className="flex flex-col gap-[12px] md:w-full">
+          <div className="flex flex-col gap-[12px] md:w-full lg:ml-[130px]">
             {subjects.map((subject, index) => (
               <div
                 key={index}
                 onClick={() => handleClick(subject.label)}
-                className="bg-white dark:bg-gray-800 dark:text-white w-[327px] h-[64px] flex items-center p-[12px] gap-[16px] rounded-[12px] shadow-md shadow-[rgba(143, 160, 193, 0.14)] cursor-pointer md:w-[640px] lg:w-[524px]  lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px] "
+                className="bg-white dark:bg-gray-800 dark:text-white w-[327px] h-[64px] flex items-center p-[12px] gap-[16px] rounded-[12px] shadow-md shadow-[rgba(143, 160, 193, 0.14)] cursor-pointer md:w-[640px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px]"
               >
                 <Image src={subject.image} alt={subject.label} />
                 <p className="text-[18px] text-black dark:text-white font-normal lg:text-[28px]">{subject.label}</p>
@@ -194,10 +204,10 @@ export default function Main() {
             Quiz completed <span className="text-[40px] text-[#313E51] dark:text-white font-bold md:text-[64px] md:w-[450px]">You scored...</span>
           </h3>
           <div className="flex flex-col gap-[12px] md:gap-[32px] lg:gap-[32px]">
-          <div className="bg-white dark:bg-[#3B4D66] rounded-[12px] flex justify-center flex-col items-center p-[32px] gap-[32px] lg:p-[42px]">
-            <p className="text-[18px] text-[#313E51] dark:text-white">Your Score</p>
+          <div className="bg-white dark:bg-[#3B4D66] rounded-[12px] flex justify-center flex-col items-center p-[32px] gap-[32px]">
+            <p className="text-[18px] text-[#313E51] dark:text-white">{type}</p>
             <p className="text-[88px] text-[#313E51] dark:text-white lg:text-[144px]">{num}</p>
-            <p className="text-[#626C7F] dark:text-white lg:text-[24px]">out of {filteredQuestions.length}</p>
+            <p className="text-[#626C7F] dark:text-white">out of {filteredQuestions.length}</p>
           </div>
           <Button text="Try Again" onClick={tryAgain} />
           </div>
@@ -223,7 +233,7 @@ export default function Main() {
                 {Object.entries(kitxva.answers).map(([key, value]) => (
                   <button
                     key={key}
-                    className={`flex  relative w-[327px] h-[64px] bg-white dark:bg-gray-800 dark:text-white p-[12px] gap-[16px] items-center rounded-[12px] group cursor-pointer  focus:outline-none focus:ring-2 focus:ring-[#A729F5] md:w-[616px] md:h-[56px] md:p-[12px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px] 
+                    className={`flex  relative w-[327px] h-[64px] bg-white dark:bg-gray-800 dark:text-white p-[12px] gap-[16px] items-center rounded-[12px] group cursor-pointer focus:border-[#A729F5] focus:border-[2px] md:w-[616px] md:h-[56px] md:p-[12px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px] 
                     ${lock ? (ans === key && kitxva?.correct === key ? 'border-green-400 border-[2px]' : ans === key ? 'border-red-400 border-[2px]' : ans===key ? 'border-red-400 border-[2px]': key === kitxva?.correct ? 'border-green-400 border-[2px]': '') : ''}`}
                     onClick={() => handleAns(key)}
                     disabled={lock}
@@ -267,6 +277,8 @@ export default function Main() {
     </div>
   );
 }
+
+
 
 
 
