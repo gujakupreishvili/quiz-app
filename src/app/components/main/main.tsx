@@ -77,11 +77,11 @@ export default function Main() {
       }
       setRect((prev) => prev + 20);
       setResult(true);
-      
+
       localStorage.setItem("score", num.toString());
       return;
     }
-    setCheckButt("")
+    setCheckButt("");
 
     if (index < filteredQuestions.length - 1) {
       const newIndex = index + 1;
@@ -141,7 +141,7 @@ export default function Main() {
     setResult(false);
     setNum(0);
     setRect(20);
-    setCheckButt("")
+    setCheckButt("");
     localStorage.clear();
   };
 
@@ -254,48 +254,46 @@ export default function Main() {
                   return (
                     <button
                       key={key}
-                      className={`flex  relative w-[327px] h-[64px] bg-white dark:bg-gray-800 dark:text-white p-[12px] gap-[16px] items-center rounded-[12px] group cursor-pointer ${checkButt===key?"border-[#A729F5] border-[2px]":""}  md:w-[616px] md:h-[56px] md:p-[12px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px] 
-                    ${
-                      lock
-                        ? ans === key && kitxva?.correct === key
-                          ? "border-green-400 border-[2px]"
-                          : ans === key
-                          ? "border-red-400 border-[2px]"
-                          : ans === key
-                          ? "border-red-400 border-[2px]"
-                          : key === kitxva?.correct
-                          ? "border-green-400 border-[2px]"
-                          : ""
-                        : ""
-                    }`}
+                      className={`flex relative w-[327px] h-[64px] bg-white dark:bg-gray-800 dark:text-white p-[12px] gap-[16px] items-center rounded-[12px] group cursor-pointer
+                        ${
+                          checkButt === key
+                            ? "border-[#A729F5] border-[2px]"
+                            : ""
+                        }  
+                        md:w-[616px] md:h-[56px] md:p-[12px] lg:w-[524px] lg:h-[76px] lg:px-[20px] lg:py-[18px] lg:text-[28px] lg:rounded-[24px]
+                        ${
+                          lock
+                            ? key === kitxva?.correct
+                              ? "border-green-400 border-[2px]"
+                              : ans === key
+                              ? "border-red-400 border-[2px]"
+                              : ""
+                            : ""
+                        }`}
                       onClick={() => {
                         handleAns(key);
                         setCheckButt(key);
                       }}
                       disabled={lock}
                     >
-                      <div
-                      style={{
-                        backgroundColor: checkButt === key ? "#A729F5" : "",
-                        color: checkButt === key ? "#ffffff" : ""
-                      }}
-                        className={`w-[40px] h-[40px] bg-[#F4F6FA] text-[18px] text-center text-[#626C7F] rounded-xl pt-[5px] group-hover:bg-[#F6E7FF] group-hover:text-[#A729F5] transition-colors 
+                    <div
+                    className={`w-[40px] h-[40px] text-[18px] text-center text-[#626C7F] rounded-xl pt-[5px] 
+                       ${checkButt === key ? "pointer-events-none" : "group-hover:bg-[#F6E7FF] group-hover:text-[#A729F5]"} 
+                       transition-colors
                       ${
                         lock
-                          ? ans === key && kitxva?.correct === key
-                            ? "bg-green-400"
-                            : ans === key
-                            ? "bg-red-400"
-                            : ans === key
-                            ? "bg-red-400"
-                            : key === kitxva?.correct
-                            ? "bg-green-400"
-                            : ""
-                          : ""
-                       } `}
-                      >
-                        {key}
-                      </div>
+                        ? key === kitxva?.correct
+                        ? "bg-green-400 text-white" 
+                        : ans === key
+                        ? "bg-red-400 text-white"   
+                        : "bg-[#F4F6FA]"            
+                        : checkButt === key
+                        ? "bg-[#A729F5] text-white"   
+                        : "bg-[#F4F6FA]"               
+                      }`}
+                    >
+                       {key}
+                    </div>
                       {value}
                       {lock && ans === key && kitxva?.correct === key && (
                         <LuCheckCircle2 className="text-green-400 absolute right-4 text-[22px]" />
