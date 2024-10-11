@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <div className="flex justify-between py-[16px] items-center px-[24px] lg:px-[140px] lg:py-[90px]">
-      <h1>{selectedSubject}</h1>
+      <h1 className='text-[#313E51] dark:text-white text-[16px] lg:text-[24px]'>{selectedSubject}</h1>
       <div className="flex justify-end items-center gap-[8px]">
         <IoSunnyOutline className="text-[#313E51] dark:text-white lg:text-[24px]" />
         <SwitchButton />
