@@ -19,3 +19,11 @@ body.dark{
   background-position: center center;
   background-position-y: 0px;
 }
+@media(width >= 1024px){
+  body{
+    background-image: url("../app/assets//arcDesk.svg");
+  }
+  body.dark{
+    background-image: url("../app/assets/arcDeskDark.svg");
+  }
+}
